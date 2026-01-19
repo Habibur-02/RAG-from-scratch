@@ -95,88 +95,10 @@ import fitz
 from datasets import load_dataset
 import pandas as pd
 
-# ১. বেঞ্চমার্ক ডেটাসেট লোড করা (Hugging Face থেকে)
-print("Loading Benchmark Dataset...")
-dataset = load_dataset("PatronusAI/financebench", split="train")
-
-# # ২. আপনার RAG অপ্টিমাইজড ফাংশন (যেখানে আপনি আপনার এক্সপেরিমেন্ট করবেন)
-# def my_optimized_rag(question, doc_path):
-#     # এখানে আপনার fitz এর কোড থাকবে
-#     doc = fitz.open(doc_path)
-
-#     # এক্সপেরিমেন্ট: সাধারণ টেক্সট বনাম টেবিল এক্সট্রাকশন
-#     # tabs = page.find_tables() ... আপনার লজিক এখানে
-
-#     context = "পিডিএফ থেকে আপনার খুঁজে বের করা সেরা তথ্য"
-
-#     # এই কনটেক্সটটি পরে LLM (যেমন GPT-4 বা Llama-3) কে পাঠানো হবে
-#     return context
-
-# # ৩. এক্সপেরিমেন্ট শুরু (প্রথম ৫টি প্রশ্ন নিয়ে টেস্ট)
-# results = []
-# for i in range(5):
-#     item = dataset[i]
-#     question = item['question']
-#     actual_answer = item['answer']
-#     doc_link = item['doc_link'] # FinanceBench এ সরাসরি পিডিএফ লিংক থাকে
-
-#     # আপনার সিস্টেম থেকে উত্তর আনা
-#     # নোট: এখানে 'my_pdf.pdf' আপনার ডাউনলোড করা ফাইল হতে হবে
-#     predicted_context = my_optimized_rag(question, pdf_path)
-
-#     results.append({
-#         "Question": question,
-#         "Actual Answer": actual_answer,
-#         "Retrieved Context": predicted_context
-#     })
-
-# # ৪. ফলাফল দেখা
-# df_results = pd.DataFrame(results)
-# print(df_results)
-dataset
-
-# প্রথম রো-এর সব তথ্য দেখা
-first_row = dataset[0]
-
-print("Question:", first_row['question'])
-print("-" * 30)
-print("Answer:", first_row['answer'])
-print("-" * 30)
-print("Source PDF Link:", first_row['doc_link'])
-dataset
-
-dataset[0]
 
 
 
 
-
-
-
-
-
-page=doc[12]
-tabs = page.find_tables()
-
-for i, table in enumerate(tabs):
-    # টেবিলটিকে একটি Pandas DataFrame হিসেবে পেতে পারেন
-    df = table.to_pandas()
-    print(f"Table {i+1}:")
-    print(df)
-
-    # অথবা সাধারণ লিস্ট হিসেবে দেখতে চাইলে:
-    # print(table.extract())
-
-for i, page in enumerate(doc):
-  tabs = page.find_tables()
-  if tabs.tables:
-      print(f"✅ পেজ নম্বর {i + 1}-এ {len(tabs.tables)}টি টেবিল পাওয়া গেছে।")
-
-      # টেবিলগুলো পান্ডাস ফ্রেম হিসেবে দেখা
-      for i, table in enumerate(tabs.tables):
-          df = table.to_pandas()
-          print(f"--- টেবিল {i+1} ---")
-          print(df.head()) # টেবিলের প্রথম ৫টি সারি দেখাচ্ছে
 
 
 
@@ -488,7 +410,20 @@ print(json.dumps(extracted_data[0], indent=2))
 
 
 
+from spacy.lang.en import English # see https://spacy.io/usage for install instructions
 
+nlp = English()
+
+# Add a sentencizer pipeline, see https://spacy.io/api/sentencizer/ 
+nlp.add_pipe("sentencizer")
+
+# Create a document instance as an example
+doc = nlp("This is a sentence. This another sentence. Hi, Dr. David!. How are you?")
+assert len(list(doc.sents)) == 4
+
+# Access the sentences of the document
+list(doc.sents)
+list(doc.sents)
 
 
 

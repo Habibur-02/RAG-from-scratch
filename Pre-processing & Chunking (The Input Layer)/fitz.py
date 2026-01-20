@@ -10,7 +10,7 @@ Original file is located at
 !pip install pymupdf tqdm spacy
 !python -m spacy download en_core_web_sm
 
-# Download PDF file
+
 import os
 import requests
 
